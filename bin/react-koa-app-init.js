@@ -24,24 +24,27 @@ if (!projectName) { // project-name 必填
 }
 const list = glob.sync('*') // 遍历当前目录
 let rootName = path.basename(process.cwd())
+console.log('rootName......',rootName);
 
 let next = undefined
 
 if (list.length) { // 如果当前目录不为空
     if (list.filter(name => {
             const fileName = path.resolve(process.cwd(), path.join('.', name))
+            console.log('fileName...',process.cwd());
             const isDir = fs.statSync(fileName).isDirectory()
             return name.indexOf(projectName) !== -1 && isDir
         }).length !== 0) {
-        console.log(`项目${projectName}已经存在`)
+            console.log(`The project ${projectName} has already existed.`)
         return
     }
     next = Promise.resolve(projectName)
 } else if (rootName === projectName) {
+    // 这里回答y的时候有bug，报错UnhandledPromiseRejectionWarning: Unhandled promise rejection (rejection id: 1): ReferenceError: error is not defined
     next = inquirer.prompt([
         {
         name: 'buildInCurrent',
-        message: '当前目录为空，且目录名称和项目名称相同，是否直接在当前目录下创建新项目？',
+        message: 'The current directory is empty, and the directory name is the same as the project name. Do you want to create new project directly under the current directory?', // 当前目录为空，且目录名称和项目名称相同，是否直接在当前目录下创建新项目？
         type: 'confirm',
         default: true
         }
@@ -58,6 +61,7 @@ function go() {
         if (projectRoot !== '.') {
             fs.mkdirSync(projectRoot)
         }
+        console.log('~~~~~~~~~~~~~~~~projectRoot~~~~~~~~~~~~~',projectRoot);
         return download(projectRoot).then(target => {
             return {
                 name: projectRoot,
