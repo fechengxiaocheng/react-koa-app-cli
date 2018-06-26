@@ -8,7 +8,7 @@ prerequisites: Node.js (>=6.x, 8.x preferred), npm version 3+ and Git.
 
     $ npm install -g react-koa-app-cli
 
-## Usafe
+## Usage
 
     $ react-koa-app init <project-name>
 
