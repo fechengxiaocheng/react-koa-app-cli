@@ -1,10 +1,10 @@
 {
   "name": "react-koa-app-cli",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "react-koa-app-cli",
   "main": "index.js",
   "bin": {
-    "react-koa-app": "./bin/react-koa-app.js"
+    "react-koa-app": "./bin/react-koa-app"
   },
   "directories": {
     "lib": "lib"
@@ -14,6 +14,24 @@
   },
   "author": "fechengxiaocheng",
   "license": "ISC",
-  "dependencies": {},
-  "devDependencies": {}
+  "dependencies": {
+    "chalk": "^2.4.1",
+    "commander": "^2.15.1",
+    "download-git-repo": "^1.0.2",
+    "latest-version": "^3.1.0",
+    "log-symbols": "^2.2.0",
+    "glob": "^7.1.2",
+    "handlebars": "^4.0.11",
+    "inquirer": "^5.2.0",
+    "metalsmith": "^2.3.0",
+    "ora": "^2.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fechengxiaocheng/react-koa-app-cli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/fechengxiaocheng/react-koa-app-cli/issues"
+  },
+  "homepage": "https://github.com/fechengxiaocheng/react-koa-app-cli#readme"
 }
