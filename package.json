@@ -1,0 +1,19 @@
+{
+  "name": "react-koa-app-cli",
+  "version": "1.0.0",
+  "description": "react-koa-app-cli",
+  "main": "index.js",
+  "bin": {
+    "react-koa-app": "./bin/react-koa-app.js"
+  },
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "fechengxiaocheng",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {}
+}
