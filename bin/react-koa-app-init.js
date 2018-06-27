@@ -22,7 +22,6 @@ if (!projectName) { // project-name 必填
 }
 const list = glob.sync('*') // 遍历当前目录
 let rootName = path.basename(process.cwd())
-console.log('rootName......',rootName);
 
 let next = undefined
 
@@ -61,7 +60,6 @@ function go() {
         if (projectRoot !== '.') {
             fs.mkdirSync(projectRoot)
         }
-        console.log('~~~~~~~~~~~~~~~~projectRoot~~~~~~~~~~~~~',projectRoot);
         return download(projectRoot).then(target => {
             return {
                 name: projectRoot, // my-app
