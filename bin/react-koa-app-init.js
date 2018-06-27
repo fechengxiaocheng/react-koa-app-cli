@@ -8,8 +8,6 @@ const glob = require('glob')
 const download = require('../lib/download')
 const generator = require('../lib/generator')
 const inquirer = require('inquirer')
-//
-const latestVersion = require('latest-version')
 const chalk = require('chalk')
 const logSymbols = require('log-symbols')
 
@@ -31,8 +29,9 @@ let next = undefined
 if (list.length) { // 如果当前目录不为空
     if (list.filter(name => {
             const fileName = path.resolve(process.cwd(), path.join('.', name))
-            console.log('fileName...',process.cwd());
+            
             const isDir = fs.statSync(fileName).isDirectory()
+            // 要init的文件名如果和list循环中的文件名一样，且这个是个文件夹的话，就返回true，表示已有这个文件。
             return name.indexOf(projectName) !== -1 && isDir
         }).length !== 0) {
             console.log(`The project ${projectName} has already existed.`)
@@ -40,11 +39,11 @@ if (list.length) { // 如果当前目录不为空
     }
     next = Promise.resolve(projectName)
 } else if (rootName === projectName) {
-    // 这里回答y的时候有bug，报错UnhandledPromiseRejectionWarning: Unhandled promise rejection (rejection id: 1): ReferenceError: error is not defined
+    // 当前目录为空&&创建的目录名和当前目录一样时，直接把当前目录当作项目根目录
     next = inquirer.prompt([
         {
         name: 'buildInCurrent',
-        message: 'The current directory is empty, and the directory name is the same as the project name. Do you want to create new project directly under the current directory?', // 当前目录为空，且目录名称和项目名称相同，是否直接在当前目录下创建新项目？
+        message: 'The current directory is empty, and the directory name is the same as the project name. Do you want to create new project directly under the current directory?', // 当前目录为空，且目录名称和项目名称相同，是否直接把当前目录作为新项目根目录？
         type: 'confirm',
         default: true
         }
@@ -58,15 +57,16 @@ next && go()
 
 function go() {
     next.then(projectRoot => {
+        
         if (projectRoot !== '.') {
             fs.mkdirSync(projectRoot)
         }
         console.log('~~~~~~~~~~~~~~~~projectRoot~~~~~~~~~~~~~',projectRoot);
         return download(projectRoot).then(target => {
             return {
-                name: projectRoot,
-                root: projectRoot,
-                downloadTemp: target
+                name: projectRoot, // my-app
+                root: projectRoot, // my-app
+                downloadTemp: target // my-app/.download-temp
             }
         })
     }).then(context => {
@@ -74,33 +74,39 @@ function go() {
         return inquirer.prompt([
         {
             name: 'projectName',
-            message: '项目的名称',
+            message: 'Project Name',
             default: context.name
         }, {
             name: 'projectVersion',
-            message: '项目的版本号',
+            message: 'project Version',
             default: '1.0.0'
         }, {
             name: 'projectDescription',
-            message: '项目的简介',
+            message: 'Project Description',
             default: `A project named ${context.name}`
         }
         ]).then(answers => {
-            return latestVersion('macaw-ui').then(version => {
-                answers.supportUiVersion = version
-                return {
-                    ...context,
-                    metadata: {
-                        ...answers
-                    }
+            return {
+                ...context,
+                metadata: {
+                    ...answers
                 }
-            }).catch(err => {
-                return Promise.reject(err)
-            })
+            }
         })
     }).then(context => {
+        /*  context = { 
+            name: 'my-app',
+            root: 'my-app',
+            downloadTemp: 'my-app/.download-temp',
+            metadata:
+            { 
+                projectName: 'my-app',
+                projectVersion: '1.0.0',
+                projectDescription: 'A project named my-app' 
+            } 
+        } */
         // 添加生成的逻辑
-        return generator(context.metadata, `${process.cwd()}/${projectName}/.download-temp`, `${process.cwd()}/${projectName}/`)
+        return generator(context.metadata, context.downloadTemp, context.root)
     }).then(context => {
         console.log(logSymbols.success, chalk.green('创建成功:)'))
         console.log()
