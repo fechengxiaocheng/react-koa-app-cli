@@ -1,6 +1,6 @@
 # react-koa-app-cli
 
-一个简单的[react-koa-app](https://github.com/fechengxiaocheng/react-koa-app) projects脚手架命令行工具。
+一个简单的[react-koa-app](https://github.com/fechengxiaocheng/react-koa-app)脚手架命令行工具。
 
 ## 安装
 
